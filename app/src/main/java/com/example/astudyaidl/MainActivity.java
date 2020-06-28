@@ -12,10 +12,13 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.donghongyu.annotation.HandlingTime;
 import com.example.aidlserver.IMsgApi;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
+
+    private boolean mIsServiceActive;
 
     private IMsgApi mIMsgApi;
 
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.d(TAG, "onServiceConnected");
+            mIsServiceActive = true;
             mIMsgApi = IMsgApi.Stub.asInterface(service);
             try {
                 if (mDeathRecipient != null) {
@@ -40,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             Log.d(TAG, "onServiceDisconnected");
-
+            mIsServiceActive = false;
         }
     };
 
@@ -54,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void binderDied() {
                 Log.e(TAG, "监听到了AIDLMsgService异常死亡💀");
+                mIsServiceActive = false;
+                bindSignService();
             }
         };
 
@@ -70,11 +76,13 @@ public class MainActivity extends AppCompatActivity {
      * 注册服务，通过Service拿到Binder对象
      */
     private void bindSignService() {
-        Intent intent = new Intent();
-        intent.setAction("com.example.aidlserver.AIDLMsgService");
-        //从 Android 5.0开始 隐式Intent绑定服务的方式已不能使用,所以这里需要设置Service所在服务端的包名
-        intent.setPackage("com.example.aidlserver");
-        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        if (!mIsServiceActive) {
+            Intent intent = new Intent();
+            intent.setAction("com.example.aidlserver.AIDLMsgService");
+            //从 Android 5.0开始 隐式Intent绑定服务的方式已不能使用,所以这里需要设置Service所在服务端的包名
+            intent.setPackage("com.example.aidlserver");
+            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        }
     }
 
     /**
@@ -90,11 +98,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    @HandlingTime
     public void btnSendMsgToAIDLServer(View view) {
         Log.d(TAG, "btnSendMsgToAIDLServer");
         if (mIMsgApi != null) {
             try {
+                bindSignService();
                 mIMsgApi.sendMsgToAIDLServer("我是客户端发送的数据。");
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -102,10 +111,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @HandlingTime
     public void btnSyncCallAIDLServer(View view) {
         Log.d(TAG, "btnSyncCallAIDLServer");
         if (mIMsgApi != null) {
             try {
+                bindSignService();
                 String result = mIMsgApi.syncCallAIDLServer("我是客户端发送的同步调用。");
                 Log.d(TAG, "接收到了AIDL Server 的返回数据：" + result);
             } catch (RemoteException e) {
@@ -114,10 +125,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @HandlingTime
     public void btnAsyncCallAIDLServer(View view) {
         Log.d(TAG, "btnAsyncCallAIDLServer");
         if (mIMsgApi != null) {
             try {
+                bindSignService();
                 mIMsgApi.asyncCallAIDLServer("我是客户端发送的异步调用。");
             } catch (RemoteException e) {
                 e.printStackTrace();

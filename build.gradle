@@ -1,12 +1,33 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
+        maven {
+            credentials {
+                username 'fHFdVG'
+                password 'gFt1qEo5SS'
+            }
+            url 'https://packages.aliyun.com/maven/repository/2009234-release-TOZrj5'
+        }
+        maven {
+            credentials {
+                username 'fHFdVG'
+                password 'gFt1qEo5SS'
+            }
+            url 'https://packages.aliyun.com/maven/repository/2009234-snapshot-uoArvw'
+        }
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            url 'http://dl.bintray.com/jetbrains/intellij-plugin-service'
+        }
         google()
         jcenter()
+
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.0.0"
-
+        classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.10'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -14,6 +35,26 @@ buildscript {
 
 allprojects {
     repositories {
+        maven {
+            credentials {
+                username 'fHFdVG'
+                password 'gFt1qEo5SS'
+            }
+            url 'https://packages.aliyun.com/maven/repository/2009234-release-TOZrj5'
+        }
+        maven {
+            credentials {
+                username 'fHFdVG'
+                password 'gFt1qEo5SS'
+            }
+            url 'https://packages.aliyun.com/maven/repository/2009234-snapshot-uoArvw'
+        }
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            url 'http://dl.bintray.com/jetbrains/intellij-plugin-service'
+        }
         google()
         jcenter()
     }

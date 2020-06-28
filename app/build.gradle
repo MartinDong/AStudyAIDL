@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'android-aspectjx'  // 使用 AspectJX 插件
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -20,6 +20,23 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    // Butterknife requires Java 8.
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        quiet true
+        abortOnError false
+    }
+}
+
+aspectjx {
+    //指定只对含有关键字'universal-image-loader', 'AspectJX-Demo/library'的库进行织入扫描，忽略其他库，提升编译效率
+//    includeJarFilter 'universal-image-loader', 'AspectJX-Demo/library'
+//    excludeJarFilter '.jar'
+//    ajcArgs '-Xlint:warning'
 }
 
 dependencies {
@@ -30,4 +47,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    api 'org.aspectj:aspectjrt:1.9.5'
 }

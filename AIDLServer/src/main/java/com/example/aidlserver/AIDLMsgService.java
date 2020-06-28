@@ -27,6 +27,12 @@ public class AIDLMsgService extends Service {
 
         @Override
         public String syncCallAIDLServer(String aString) throws RemoteException {
+            try {
+                Log.d(TAG, "模拟线程卡顿：2000ms");
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             StringBuilder stringBuilder = new StringBuilder(aString);
             Log.d(TAG, "接收到客户端发送来的信息：" + stringBuilder.toString());
             Log.d(TAG, "Server 改造数据：" + stringBuilder.append("---Server修改了数据").toString());
@@ -35,6 +41,12 @@ public class AIDLMsgService extends Service {
 
         @Override
         public void asyncCallAIDLServer(String aString) throws RemoteException {
+            try {
+                Log.d(TAG, "模拟线程卡顿：2000ms");
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             StringBuilder stringBuilder = new StringBuilder(aString);
             Log.d(TAG, "接收到客户端发送来的信息：" + stringBuilder.toString());
             Log.d(TAG, "Server 改造数据：" + stringBuilder.append("---Server修改了数据").toString());
